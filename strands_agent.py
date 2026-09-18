@@ -1,10 +1,14 @@
 import os
 from strands import Agent, tool
 from strands.models import BedrockModel
-# from strands_tools import retrieve
+from bedrock_agentcore import BedrockAgentCoreApp
+
 
 MODEL_ID = "us.amazon.nova-lite-v1:0"
 REGION = "us-east-1"
+
+app = BedrockAgentCoreApp()
+
 
 @tool
 def lookup_course(department: str, course_number: str) -> str:
@@ -107,8 +111,8 @@ def create_university_agent():
 
 
 # main function to run the agent
-def main():
-   
+@app.entrypoint
+def student_query():
 
     # Start the agent's interaction loop
     agent = create_university_agent()
@@ -123,4 +127,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+   app.run()
+   #student_query()
