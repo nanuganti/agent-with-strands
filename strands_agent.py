@@ -112,20 +112,24 @@ def create_university_agent():
 
 # main function to run the agent
 @app.entrypoint
-def student_query():
+def student_query(payload, context):
+    """
+    Handles incoming local or remote invocation requests from AgentCore.
+    """
 
-    # Start the agent's interaction loop
-    agent = create_university_agent()
-    # run agent on user input until the user types "exit"
-    while True:
-        user_input = input("You: ")
-        if user_input.lower() == "exit":
-            print("Exiting the University virtual assistant. Goodbye!")
-            break
-        response = agent(user_input)
-        print(f"Assistant: {response}")
+    # 1. Extract the text query from the incoming event payload
+    user_prompt = payload.get("prompt", "")
 
+    # 2. Create the University virtual assistant agent
+    agent = create_university_agent()   
+
+    # 3. Process the prompt with your Strands agent
+    agent_output = agent(user_prompt)
+
+    # 4. Return the structured response expected by the AgentCore local runtime
+    return {
+        "response": str(agent_output)
+    }
 
 if __name__ == "__main__":
    app.run()
-   #student_query()
